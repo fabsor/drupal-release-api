@@ -1,0 +1,20 @@
+{
+    "name": "fabsor/drupal-release-api",
+    "type": "library",
+    "license": "GPL",
+    "description": "Fetch information about Drupal releases",
+    "authors": [
+        {
+            "name": "Fabian Sorqvist",
+            "email": "fabian@sorqvist.nu"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-0": { "Fabsor\\DrupalReleaseApi\\": "" }
+    },
+    "target-dir": "Fabsor/DrupalReleaseApi",
+    "minimum-stability": "dev"
+}
