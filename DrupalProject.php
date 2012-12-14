@@ -12,7 +12,7 @@ namespace Fabsor\DrupalReleaseApi;
 /**
  * Representation of a Drupal Project with release information.
  */
-class DrupalProject {
+class DrupalProject implements \JsonSerializable {
 
     protected $title;
     protected $shortName;
@@ -219,5 +219,20 @@ class DrupalProject {
             return new \Exception("Invalid value for terms: The value must be an array.");
         }
         $this->terms = $terms;
+    }
+
+    public function JsonSerialize()
+    {
+        return array(
+            'title' => $this->title,
+            'shortName' => $this->shortName,
+            'apiVersion' => $this->apiVersion,
+            'recommendedMajor' => $this->recommendedMajor,
+            'projectStatus' => $this->projectStatus,
+            'link' => $this->link,
+            'releases' => $this->releases,
+            'currentRelease' => $this->currentRelease,
+            'terms' => $this->terms,
+        );
     }
 }

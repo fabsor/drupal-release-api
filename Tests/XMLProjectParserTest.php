@@ -15,32 +15,45 @@ use Fabsor\DrupalReleaseApi\XMLProjectParser;
  */
 class XMLProjectParserTest extends \PHPUnit_Framework_TestCase
 {
-  /**
-   * Test parsing the project xml file.
-   */
-  function testParseProjectXML()
-  {
-    // We load the file from our local directory.
-    $data = simplexml_load_file(__DIR__ . '/project.xml');
-    $parser = new XMLProjectParser();
-    $project = $parser->parse($data);
-    // Check that the basics are right.
-    $this->assertEquals($project->getTitle(), 'Drupal core');
-    $this->assertEquals($project->getApiVersion(), '7.x');
-    $this->assertEquals($project->getShortName(), 'drupal');
-    $this->assertEquals($project->getRecommendedMajor(), "7");
-    $this->assertEquals($project->getProjectStatus(), "published");
-    $this->assertEquals($project->getLink(), "http://drupal.org/project/drupal");
-    // Check that the current release is the right one, 7.17.
-    $currentRelease = $project->getCurrentRelease();
-    $this->assertEquals($currentRelease['version'], '7.17');
-    // Terms should be an associative array.
-    $terms = $project->getTerms();
-    $expectedTerms = array(
-      'Projects' => 'Drupal core',
-      'Development status' => 'Under active development',
-      'Maintenance status' => 'Actively maintained',
-    );
-    $this->assertEquals($expectedTerms, $terms);
-  }
+    /**
+     * Test parsing the project xml file.
+     */
+    function testParseProjectXML()
+    {
+        // We load the file from our local directory.
+        $data = simplexml_load_file(__DIR__ . '/project.xml');
+        $parser = new XMLProjectParser();
+        $project = $parser->parse($data);
+        // Check that the basics are right.
+        $this->assertEquals($project->getTitle(), 'Drupal core');
+        $this->assertEquals($project->getApiVersion(), '7.x');
+        $this->assertEquals($project->getShortName(), 'drupal');
+        $this->assertEquals($project->getRecommendedMajor(), "7");
+        $this->assertEquals($project->getProjectStatus(), "published");
+        $this->assertEquals($project->getLink(), "http://drupal.org/project/drupal");
+        // Check that the current release is the right one, 7.17.
+        $currentRelease = $project->getCurrentRelease();
+        $this->assertEquals($currentRelease['version'], '7.17');
+        // Terms should be an associative array.
+        $terms = $project->getTerms();
+        $expectedTerms = array(
+            'Projects' => 'Drupal core',
+            'Development status' => 'Under active development',
+            'Maintenance status' => 'Actively maintained',
+        );
+        $this->assertEquals($expectedTerms, $terms);
+        // json_encode should give us an array representation of the object.
+        $expectedArr = array(
+            'title' => $project->getTitle(),
+            'shortName' => $project->getShortName(),
+            'apiVersion' => $project->getApiVersion(),
+            'recommendedMajor' => $project->getRecommendedMajor(),
+            'projectStatus' => $project->getProjectStatus(),
+            'link' => $project->getLink(),
+            'releases' => $project->getReleases(),
+            'currentRelease' => $project->getCurrentRelease(),
+            'terms' => $project->getTerms(),
+        );
+        $this->assertEquals(json_decode(json_encode($project), true), $expectedArr);
+    }
 }
