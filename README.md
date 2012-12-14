@@ -10,6 +10,8 @@ other sources.
 This example fetches the Drupal project and dumps info about the
 current release:
 
-    use Fabsor\DrupalReleaseApi\HTTPReleaseFetcher; $project =
-    $fetcher->getReleaseInfo('drupal', '7.x');
+    use Fabsor\DrupalReleaseApi\HTTPReleaseFetcher;
+
+	$fetcher = new HTTPReleaseFetcher();
+	$project = $fetcher->getReleaseInfo('drupal', '7.x');
     var_dump($project->getCurrentRelease());
