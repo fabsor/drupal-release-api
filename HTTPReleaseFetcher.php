@@ -19,6 +19,7 @@ class HTTPReleaseFetcher implements ReleaseFetcherInterface
     const DRUPALORG_RELEASE_URL =  'http://updates.drupal.org/release-history';
 
     protected $releaseUrl;
+    protected $parser;
 
     /**
      * @param string $releaseUrl
@@ -36,7 +37,9 @@ class HTTPReleaseFetcher implements ReleaseFetcherInterface
     {
         $requestUrl = $this->releaseUrl . '/' . $projectName . '/' . $api;
         $data = new \SimpleXMLElement($requestUrl, 0, true);
-        $project = new DrupalProject($data, $api);
-        return $project;
+        if (!isset($this->parser)) {
+          $this->parser = new XMLProjectParser();
+        }
+        return $this->parser->parse($data);
     }
 }

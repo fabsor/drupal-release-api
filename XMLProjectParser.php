@@ -15,27 +15,28 @@ namespace Fabsor\DrupalReleaseApi;
 class XMLProjectParser
 {
 
-  function parse($data) {
-      $project = new DrupalProject();
-  }
-
   /**
-   * Parse XML Data and set properties.
-   * @param \SimpleXMLElement $data
+   * Parse Drupal project ReleaseXML data
+   * and return a DrupalProject object.
+   * @return DrupalProject a fully populated DrupalProject object.
    */
-  protected function parseData(\SimpleXMLElement $data)
+  function parse(\SimpleXMLElement $data)
   {
-      $this->title = (string) $data->title;
-      $this->shortName = (string) $data->short_name;
-      $this->recommendedMajor = (int) $data->recommended_major;
-      $this->projectStatus = (string) $data->project_status;
-      $this->link = (string) $data->link;
-      $this->releases = array();
-      $this->terms = array();
-      $this->currentRelease = FALSE;
+      $project = new DrupalProject();
+      $project->setApiVersion((string) $data->api_version);
+      $project->setTitle((string) $data->title);
+      $project->setShortName((string) $data->short_name);
+      $project->setRecommendedMajor((int) $data->recommended_major);
+      $project->setProjectStatus((string) $data->project_status);
+      $project->setLink((string) $data->link);
+      $terms = array();
       foreach ($data->terms[0]->term as $term) {
-          $this->terms[(string) $term->name] = (string) $term->value;
+          $terms[(string) $term->name] = (string) $term->value;
       }
+      $project->setTerms($terms);
+
+      $releases = array();
+      $currentRelease = FALSE;
       foreach ($data->releases->release as $release) {
           $releaseArr = array(
               'version' => (string) $release->version,
@@ -44,9 +45,14 @@ class XMLProjectParser
               'extra' => (string) $release->version_extra,
               'status' => (string) $release->status,
           );
-          $this->currentRelease = $this->compareRelease($releaseArr, $this->currentRelease);
-          $this->releases[$releaseArr['version']] = $releaseArr;
+          $currentRelease = $this->compareRelease($releaseArr, $currentRelease);
+          $releases[$releaseArr['version']] = $releaseArr;
       }
+      $project->setReleases($releases);
+      if ($currentRelease) {
+        $project->setCurrentRelease($currentRelease);
+      }
+      return $project;
   }
 
   protected function compareRelease($version1, $version2)
