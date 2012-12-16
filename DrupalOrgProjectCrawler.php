@@ -84,7 +84,7 @@ class DrupalOrgProjectCrawler
           $project = array();
           $project['link'] = $this->baseUrl . $projectLink->attributes->getNamedItem('href')->textContent;
           $project['title'] = $projectLink->nodeValue;
-          $machineName = array_pop(explode($project['link'], '/'));
+          $machineName = array_pop(explode('/', $project['link']));
           $projects[$machineName] = $project;
         }
         return $projects;
