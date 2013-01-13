@@ -12,7 +12,7 @@ namespace Fabsor\DrupalReleaseApi;
 /**
  * Representation of a Drupal Project with release information.
  */
-class DrupalProject implements \JsonSerializable {
+class DrupalProject {
 
     protected $title;
     protected $shortName;
