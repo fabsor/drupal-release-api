@@ -54,6 +54,6 @@ class XMLProjectParserTest extends \PHPUnit_Framework_TestCase
             'currentRelease' => $project->getCurrentRelease(),
             'terms' => $project->getTerms(),
         );
-        $this->assertEquals(json_decode(json_encode($project), true), $expectedArr);
+        $this->assertEquals(json_decode(json_encode($project->JsonSerialize()), true), $expectedArr);
     }
 }
